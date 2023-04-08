@@ -1,0 +1,90 @@
+
+
+html, body {font-size: 1em; margin:0; padding:0; width:100%; height:100%; }
+
+body { 
+	font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif; 
+	width:100%; height:100%; 
+}
+
+p { margin-bottom: 15px;  }
+
+pre,
+code,
+kbd,
+samp,
+tt{	
+	margin-bottom: 15px; 
+	font-family: "Courier New", monospace, serif;
+	font-variant-numeric: tabular-nums;
+	font-size: 100%; 
+	line-height:1em;
+	font-weight:500;
+}
+
+h1, h2, h3, h4 { margin-top:0.8em; margin: bottom 1.0em; }
+h1 { font-size:1.6em; font-weight: bold;}
+h2 { font-size:1.5em; font-weight: bold;}
+h3 { font-size:1.1em; font-weight: bold;}
+h4 { font-size:1.1em; font-weight: bold;}
+
+h1, h2, h3, h4 {color: #333;}
+
+strong { font-weight:bold; }
+
+ul { padding:0; margin-left:0; list-style-type: none;}
+ul { margin-left: 0; padding-left: 2em; list-style-type: none; }
+li:before {
+	content: "\2713";
+	text-align: left;
+	display: inline-block;
+	padding: 0;
+	margin: 0 0 0 -2em;
+	width: 2em;
+}
+
+img {
+	display: block;
+	margin: 1.7em auto;
+	width: 70%;
+}
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
+
+/* Links */
+a, a:visited { color:#999; text-decoration: none; }
+
+/* Main title (AND titles that are links) */
+.title, a.title {color:black;} 
+
+/* Separators  */
+.divider {text-align:center; color:#ddd;  height: 2.1em;}
+.spacer {text-align:center; color:#ddd; height: 1.1em;}
+
+a.return-to-top-link { color:#33a; }
+
+#main-content {
+	max-width:700px;
+	padding:0px;
+	margin:0px auto 20px auto;
+	line-height: 1.6em;
+	padding: 0 20px 0 20px;
+}
+
+ul {
+  list-style: none; /* Remove default bullets */
+}
+
+ul li::before {
+  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+  color: black; /* Change the color */
+  font-weight: bold; /* If you want it to be bold */
+  display: inline-block; /* Needed to add space between the bullet and the text */
+  width: 1em; /* Also needed for space (tweak if needed) */
+  margin-left: -1em; /* Also needed for space (tweak if needed) */
+}

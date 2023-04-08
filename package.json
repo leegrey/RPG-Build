@@ -1,0 +1,17 @@
+{
+  "name": "markdown_preprocessor",
+  "version": "1.0.0",
+  "description": "Markdown preprocessor for generating dice tables in html.",
+  "main": "compile.js",
+  "author": "Lee Grey",
+  "dependencies": {
+    "markdown": "^0.5.0"
+  },
+  "scripts": {
+    "test":"test"
+  },
+  "license": "GPLV3",
+  "bin": {
+    "rpgbuild": "./rpgbuild.js"
+  }
+}

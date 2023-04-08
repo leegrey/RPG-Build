@@ -1,0 +1,18 @@
+[
+
+  {
+    "sourceFile": "markdown/table_test.md",
+    "outputFile": "www/table_test.html",
+    "title: ": "Table Test"
+  },
+
+  {
+    "sourceFiles": [
+      "markdown/tables_a.md",
+      "markdown/tables_b.md"
+    ],
+    "outputFile": "www/tables_multi.html",
+    "title: ": "Combined Documents Test"
+  }
+  
+]
