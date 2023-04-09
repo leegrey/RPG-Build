@@ -9,6 +9,10 @@ This is a markdown preprocessor for generating roleplaying content in markdown f
 
 It supports all standard polyhedral dice, d66, and d100 percentile tables, as well as a full-auto mode that attempts to find the best match for a given number of items. This automatic behaviour is useful during development, as it aids play testing with incomplete tables, and minimises maintenance time when adding or removing items.
 
+*The following is a screenshot of a d66 table:*
+
+![image](doc/img/d66_example.png)
+
 ## Installation
 
 This script requires [nodejs](https://nodejs.org/). 
