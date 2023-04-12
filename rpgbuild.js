@@ -375,6 +375,9 @@ function collectValidLines(lines, startIndex, endIndex) {
      // iterate the line range, and collect valid lines
     // (allows us to skip empty lines that have been used for 
     // organisational purpose while composing table lists)
+
+    var hash = new Map();
+
     var validLines = [];
     for (let i = startIndex; i <= endIndex; i++) {
         var isLastItem = i == endIndex;
@@ -384,6 +387,13 @@ function collectValidLines(lines, startIndex, endIndex) {
             continue;
         }
         validLines.push(line);
+
+        // check for duplicate entries
+        if (hash.has(line)) {
+            console.log("Warning - duplicate entry encountered:", line);
+        }
+
+        hash.set(line, true);
     }
     return validLines;
 }
