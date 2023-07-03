@@ -2,6 +2,8 @@
 
 This is a markdown preprocessor for generating roleplaying content in markdown format.
 
+Web-app Version [here](https://mothteeth.com/apps/rpgbuild/) 
+
 *Main functionality*:
 
 - automatically generate html tables from unformatted lists of items.
