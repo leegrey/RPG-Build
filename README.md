@@ -183,6 +183,18 @@ Inline tables or other html content can be wrapped in `[raw]` and `[end_raw]` ta
 
     [end_raw]
 
+### Outliner Notes
+
+Some text editors that feature an "Outliner" that displays markdown headers in a sidebar for easy access. This feature allows users to display "Outline notes" in the outliner without including them in the final document.
+
+Any header that starts with an @ symbol will be stripped.
+
+*Example format:*
+```
+  # @ Outliner Note will be stripped
+  ## @ Outliner Note will be stripped
+  ### @ Outliner Note will be stripped
+```
 ## License
 
 RPG Build is released under the [GPLV3](https://www.gnu.org/licenses/gpl-3.0.en.html) License.

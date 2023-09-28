@@ -196,6 +196,13 @@ function parse(data, title = "") {
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
         const line = lines[lineIndex];
 
+        // remove "outline notes" - which are headings that have 
+        // an @ symbol - used to display outline notes 
+        // in a text outliner, but for it to be removed at compile
+        if (isOutlineNote(line)) {
+            continue;
+        }
+
         // if a line contains custom markup
         if (containsCommand(line)) {
 
@@ -357,6 +364,23 @@ function generateTableD66(lines, start, size, columns, rows, output) {
 
 function removeAllWhitespace(s) {
     return s.replace(/\s+/g, '');
+}
+
+function isOutlineNote(s) {
+
+    // if it's not a hash, then it's not an outline note
+    if (s[0] != '#') {
+        return false;
+    }
+
+    // find the first character that isn't a hash or a space
+    // and if it's an `@`, it's an Outline Note
+    for (var i = 1; i < s.length; i++) {
+        var c = s[i];
+        if (c != "#" && c != " ") {
+            return c == '@';
+        }
+    }
 }
 
 function seekTableEnd(lines, start) {
@@ -599,3 +623,25 @@ function buildMultiColumnTable(itemLines, tableLines, columns, rollType, validIt
     tableLines.push(tableTail);
 }
 
+// Outline notes are used to reveal outline notes
+// within a text editor that will not be included in the 
+// final output text
+// any line that starts with hashes and is followed by 
+// an at @ symbol (ignoring spaces)
+// eg: ## @ Outline note goes here
+function isOutlineNote(s) {
+
+    // if it's not a hash, then it's not an outline note
+    if (s[0] != '#') {
+        return false;
+    }
+
+    // find the first character that isn't a hash or a space
+    // and if it's an `@`, it's an Outline Note
+    for (var i = 1; i < s.length; i++) {
+        var c = s[i];
+        if (c != "#" && c != " ") {
+            return c == '@';
+        }
+    }
+}
