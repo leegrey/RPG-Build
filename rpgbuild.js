@@ -86,6 +86,7 @@ const RollAgainString = "Roll again";
 const TableEndToken = "[end_table]";
 
 var defaultAutoColumns = 1;
+var d66Spacer = false;
 
 var htmlHead = `
 <!DOCTYPE html>
@@ -210,6 +211,7 @@ function parse(data, title = "") {
 
             // parse the command string to see if it has arguments
             var optionSplit = line.split(":");
+
             if (optionSplit.length > 1) {
                 var optionTokens = optionSplit[1].split(" ");
                 var parsedColumns = parseInt(optionTokens[0]);
@@ -292,6 +294,8 @@ function processSet(commandString) {
         return;
     } 
     var target = tokens[1];
+
+    // TODO: Put these in a dictionary so I don't have to translate the var name
     switch (target) {
         case "default_columns":
             if (tokens.length < 3) { 
@@ -306,11 +310,23 @@ function processSet(commandString) {
                 defaultAutoColumns = newValue;
             }
             break;
+        case "d66_spacer":
+       
+            if (tokens.length < 3) { 
+                console.log("Invalid:", commandString);
+                return; 
+            } 
+            var boolString = removeAllWhitespace(tokens[2]);
+            d66Spacer = boolString === 'true';
+            break;
+
         default:
             console.log("Unknown set:", commandString);
             break;
     }
 }
+
+
 
 function generateRawChunk(lines, lineIndex, tableLines) {
     var endIndex = lineIndex;
@@ -363,6 +379,9 @@ function generateTableD66(lines, start, size, columns, rows, output) {
 }
 
 function removeAllWhitespace(s) {
+    // return line breaks
+    s = s.replace(/(\r\n|\n|\r)/gm, "");
+    // return spaces
     return s.replace(/\s+/g, '');
 }
 
@@ -529,6 +548,7 @@ function generatePolydieAutoTable(lines, lineIndex, tableLines, columns = 3) {
 }
 
 function generateTableD66Auto(lines, lineIndex, tableLines, columns = 3) {
+
     var endIndex = seekTableEnd(lines, lineIndex);
 
     if (endIndex < 0 || endIndex - lineIndex < 1) {
@@ -546,12 +566,29 @@ function generateTableD66Auto(lines, lineIndex, tableLines, columns = 3) {
     // the final table lines
     var itemLines = [];
 
+    // build a list of spacer lines for this number of coumns
+    var d66SpacerLines = [];
+    if (d66Spacer) {
+        var itemsPerColumn = Math.ceil( 36 / columns);
+        for (let i = 0; i < columns; i++) {
+            var spacersRequired = Math.ceil(itemsPerColumn / 6) - 1;
+            for (let ig = 0; ig < spacersRequired; ig++) {
+                d66SpacerLines.push(i*itemsPerColumn + ig * 6 + 6);
+            }
+        }
+    }
+
     // keep this outside the loop so we can look at it later.
     var rangeEnd = 0;
     for (let i = 0; i < 36; i++) {
 
         var line = "<b>" +  d66Rolls[i] + "</b> - ";
         if (validLines.length > i) {
+
+            if (d66Spacer && d66SpacerLines.indexOf(i) != -1) {
+                itemLines.push("<div> &nbsp; </div>");
+            }
+
             line += validLines[i];    
         }
         
