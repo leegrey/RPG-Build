@@ -165,9 +165,11 @@ The `set` command can be used for setting values inside the parse.
 
 #### Valid `Set` Arguments:
 
-`set default_columns 3` - set the default number of columns used when none is supplied  
+`set default_columns 3` - set the default number of columns used when none is supplied.  
 
-`d66_spacer true/false` - enable spacers in d66 tables (between groups of six)  
+`d66_spacer true/false` - enable spacers in d66 tables (between groups of six).  
+
+`set render_die_type true/false` - display the die type at the top of the table.  
 
 ### Inline HTML / Raw input
 

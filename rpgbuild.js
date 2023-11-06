@@ -87,6 +87,8 @@ const TableEndToken = "[end_table]";
 
 var defaultAutoColumns = 1;
 var d66Spacer = false;
+var renderDieType = true;
+var renderItemCount = true;
 
 var htmlHead = `
 <!DOCTYPE html>
@@ -310,6 +312,7 @@ function processSet(commandString) {
                 defaultAutoColumns = newValue;
             }
             break;
+
         case "d66_spacer":
        
             if (tokens.length < 3) { 
@@ -318,6 +321,15 @@ function processSet(commandString) {
             } 
             var boolString = removeAllWhitespace(tokens[2]);
             d66Spacer = boolString === 'true';
+            break;
+
+         case "render_die_type":
+            if (tokens.length < 3) { 
+                console.log("Invalid:", commandString);
+                return; 
+            } 
+            var boolString = removeAllWhitespace(tokens[2]);
+            renderDieType = boolString === 'true';
             break;
 
         default:
@@ -641,7 +653,9 @@ function buildMultiColumnTable(itemLines, tableLines, columns, rollType, validIt
         "{width_style}",
         Math.floor(100 / columns) + "%" );
 
-    tableLines.push(`<div><b>` + rollType + `</b> (<i>${validItemsCount} items</i>)</div>`);
+    if (renderDieType) {
+        tableLines.push(`<div><b>` + rollType + `</b> (<i>${validItemsCount} items</i>)</div>`);
+    }
     tableLines.push(tableHead);
     tableLines.push(trHead);
 
