@@ -175,7 +175,7 @@ The `set` command can be used for setting values inside the parse.
 
 `[page_break]` - inserts a page break separator for print media. 
 
-NOTE - uses the css: `page-break-after: always;`. 
+NOTE - uses the css: `page-break-after: always;`
 
 This css is embedded into the output html. Override visibility or behaviour using the `.pagebreak` css class.
 
