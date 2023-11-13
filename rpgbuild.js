@@ -99,6 +99,27 @@ var htmlHead = `
 <!--  
 <link rel="stylesheet" href="reset.css">
 -->
+  <style>
+    .pagebreak {
+        width: 100%;
+        height: 0px;
+        background: none;
+        padding:0;
+        margin:0;
+    }
+
+    @media print {
+        .pagebreak {
+            width: 0;
+            height: 0;
+            background: none;
+            padding:0;
+            margin:0;
+            clear: both;
+            page-break-after: always;
+        }
+    }
+  </style>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -120,12 +141,15 @@ const tdTail = '</td>';
 const trHead = '<tr>';
 const trTail = '</tr>';
 
+const pageBreakDiv = `<div class="pagebreak"> </div>`;
+
 // used to recognise if a line contains a command
 const commandHeuristics = [
     "[table",
     "[raw",
     "[set",
-    "[end"
+    "[end",
+    "[page"
 ];
 
 const d66RollsString = "11,12,13,14,15,16,21,22,23,24,25,26,31,32,33,34,35,36,41,42,43,44,45,46,51,52,53,54,55,56,61,62,63,64,65,66";
@@ -188,6 +212,16 @@ function containsCommand(s) {
         } 
     }
     return false;
+}
+
+function createInsertMarker(inserts, outputLines, s) {
+    var insert = {
+        "marker": createMarker(),
+        "insertString": s
+    }
+    inserts.push(insert);
+    // insert the marker, so we can replace it later
+    outputLines.push(insert.marker);
 }
 
 function parse(data, title = "") {
@@ -255,17 +289,13 @@ function parse(data, title = "") {
             } else if (line.includes("[set")) {
                 processSet(line);
             }
+            else if (line.includes("[page_break")) {
+                createInsertMarker(inserts, outputLines, pageBreakDiv);
+            }
             
             // create an insert data object to associate the marker and the table html
-            var insert = {
-                "marker": createMarker(),
-                "table": tableLines.join("\n"),
-                "lines": tableLines
-            };
-            inserts.push(insert);
-            
-            // insert the marker, so we can replace it later
-            outputLines.push(insert.marker);
+            createInsertMarker(inserts, outputLines, tableLines.join("\n"));
+
             // jump over the lines making up the unparsed table
             lineIndex += linesConsumed;
 
@@ -290,7 +320,7 @@ function parse(data, title = "") {
     var finalOutput = markdown.toHTML(finalOutput);
     // replace all the table markers with the actual table html
     inserts.forEach((insert)=>{
-        finalOutput = finalOutput.replace(insert.marker, insert.table);
+        finalOutput = finalOutput.replace(insert.marker, insert.insertString);
     });
     var customHtmlHead = htmlHead.replace("{title}", title);
     // add html head and tail

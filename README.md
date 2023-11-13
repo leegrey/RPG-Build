@@ -171,6 +171,15 @@ The `set` command can be used for setting values inside the parse.
 
 `set render_die_type true/false` - display the die type at the top of the table.  
 
+#### Page Breaks
+
+`[page_break]` - inserts a page break separator for print media. 
+
+NOTE - uses the css: `page-break-after: always;`. 
+
+This css is embedded into the output html. Override visibility or behaviour using the `.pagebreak` css class.
+
+
 ### Inline HTML / Raw input
 
 Inline tables or other html content can be wrapped in `[raw]` and `[end_raw]` tags. The content inside will be passed through unprocessed, and ignored by the markdown processor.
