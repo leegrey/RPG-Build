@@ -133,8 +133,12 @@ const d66Rolls = d66RollsString.split(',');
     
 /// MAIN Execution //////
 
+var totalTablesGenerated = 0;
+
 jobs.forEach( (job) => {
     var data = "";
+    // reset per job
+    totalTablesGenerated = 0;
     if (job.hasOwnProperty("sourceFiles")) {
         var allData = [];
         job.sourceFiles.forEach((sourceFile)=>{
@@ -156,6 +160,7 @@ jobs.forEach( (job) => {
 
     const compiled = parse(data, job.title || "");
     fs.writeFileSync(job.outputFile, compiled);
+    console.log("Tables Generated:", totalTablesGenerated);
 });
 
 /////////////////////////
@@ -263,6 +268,12 @@ function parse(data, title = "") {
             outputLines.push(insert.marker);
             // jump over the lines making up the unparsed table
             lineIndex += linesConsumed;
+
+            // HACKY way to infer that a table was created...
+            if (linesConsumed > 0) {
+                totalTablesGenerated++;
+            }
+
         } else {
             // if no parsable item was found occurred, 
             // just push the current line
