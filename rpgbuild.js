@@ -224,9 +224,24 @@ function createInsertMarker(inserts, outputLines, s) {
     outputLines.push(insert.marker);
 }
 
+function removeCommentedLines(lines) {
+    var stripped = [];
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (removeAllWhitespace(line).startsWith("//")) {
+            continue;
+        }
+        stripped.push(line);
+    }
+    return stripped;
+}
+
 function parse(data, title = "") {
     // split the input into individual lines    
     var lines = data.split("\n");
+
+    // TODO: parse and remove comment lines
+    lines = removeCommentedLines(lines);
 
     // "inserts" are info used to hold generated preprocessor 
     // html data, to be inserted into the 
@@ -450,6 +465,16 @@ function isOutlineNote(s) {
     for (var i = 1; i < s.length; i++) {
         var c = s[i];
         if (c != "#" && c != " ") {
+            return c == '@';
+        }
+    }
+}
+
+// TODO: use this for comment detection instead of remove whitespace
+function findFirstNonWhitespaceCharacter() {
+    for (var i = 1; i < s.length; i++) {
+        var c = s[i];
+        if (c != " " && c != "\n    ") {
             return c == '@';
         }
     }

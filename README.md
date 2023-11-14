@@ -179,7 +179,6 @@ Uses the css: `page-break-after: always;`
 
 This css is embedded into the output html. Override visibility or behaviour using the `.pagebreak` css class.
 
-
 ### Inline HTML / Raw input
 
 Inline tables or other html content can be wrapped in `[raw]` and `[end_raw]` tags. The content inside will be passed through unprocessed, and ignored by the markdown processor.
@@ -195,6 +194,12 @@ Inline tables or other html content can be wrapped in `[raw]` and `[end_raw]` ta
     </table> 
 
     [end_raw]
+
+### Comments
+
+`<!-- html style comments -->` are supported.
+
+In table lists, double slash comments (`// like this`) are supported for exluding items from the table.
 
 ### Outliner Notes
 
