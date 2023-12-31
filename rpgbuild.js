@@ -11,6 +11,24 @@ const argv = process.argv;
 
 var jobs = null;
 
+function hasCommand(...args) {
+    let exists = false;
+    argv.forEach(cmd => {
+        args.forEach(checkCmd => {
+            if (cmd == checkCmd) {
+                exists = true;
+            }    
+        });
+    });
+    return exists;
+}
+
+const isDryRun = hasCommand("--dry-run", "-dr");
+
+if (isDryRun) {
+    console.log("Dry run...");
+}
+
 // Check to see if there are any commandline arguments, and attempt to
 // interpret them as input and output filenames
 if (argv.length > 2) {
@@ -183,7 +201,11 @@ jobs.forEach( (job) => {
     } 
 
     const compiled = parse(data, job.title || "");
-    fs.writeFileSync(job.outputFile, compiled);
+
+    if (!isDryRun) {
+        fs.writeFileSync(job.outputFile, compiled);
+    }
+    
     console.log("Tables Generated:", totalTablesGenerated);
 });
 

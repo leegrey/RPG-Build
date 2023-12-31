@@ -90,6 +90,14 @@ To build the output files, run the `rpgbuild` command in the same directory as t
     
 The output html files will be saved to the location specified in `rpgbuild.json`. 
 
+### Dry Run (`--dry-run` or `-dr`)
+
+Using the flag `--dry-run` or `-dr` will execute all work but will not save the output file. This can be useful for validating single files while working.
+
+Example:
+
+`rpgbuild my-tables.md -dr`
+
 ### CSS Style
 
 The output html files contain a reference to an external style sheet, called `style.css`. The example project supplies an example style sheet, which can be customised as needed.
