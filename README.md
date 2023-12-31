@@ -98,6 +98,8 @@ Example:
 
 `rpgbuild my-tables.md -dr`
 
+NOTE: This feature is not properly supported until the cli parser is updated. It should work with the above single-file example but may break with other syntax configurations.
+
 ### CSS Style
 
 The output html files contain a reference to an external style sheet, called `style.css`. The example project supplies an example style sheet, which can be customised as needed.

@@ -23,15 +23,36 @@ function hasCommand(...args) {
     return exists;
 }
 
+// NOTE: adding these flags has caused a problem with
+// extracting the output filename, because it's using
+// a very simple parser that expects a too-specific
+// sequence of commands: 
+//  `rpgbuild` - with no arguments, 
+//  `rpgbuild inputfile.md`
+//  `rpgbuild inputfile.md outputfile.html`
+// SO, providing different arguments breaks the job by
+// accidentally inserting the third argument as an output filename
+// (eg `outputFile : "--dry-run"`)
+// NOTE: using dry run alone still "works" because
+// we are skipping the file output step so the bad output path is "ok"
+// but `verbose` is not properly supported.
+
 const isDryRun = hasCommand("--dry-run", "-dr");
+
+// TODO: verbose not properly supported due to bug in above comment
+const verbose = hasCommand("--verbose", "-v");
 
 if (isDryRun) {
     console.log("Dry run...");
+}
+if (verbose) {
+    console.log("Verbose...");
 }
 
 // Check to see if there are any commandline arguments, and attempt to
 // interpret them as input and output filenames
 if (argv.length > 2) {
+
     var commands = argv.slice(2);
     var pathToSourceFile = commands[0];
     
@@ -178,6 +199,10 @@ const d66Rolls = d66RollsString.split(',');
 var totalTablesGenerated = 0;
 
 jobs.forEach( (job) => {
+    // if (verbose) {
+    //     console.log("Job:", job);
+    // }
+
     var data = "";
     // reset per job
     totalTablesGenerated = 0;
@@ -740,6 +765,10 @@ function buildMultiColumnTable(itemLines, tableLines, columns, rollType, validIt
     var customTdHead = tdHead.replace(
         "{width_style}",
         Math.floor(100 / columns) + "%" );
+
+    if (verbose) {
+        console.log("Table item count:", validItemsCount);
+    }
 
     if (renderDieType) {
         tableLines.push(`<div><b>` + rollType + `</b> (<i>${validItemsCount} items</i>)</div>`);
