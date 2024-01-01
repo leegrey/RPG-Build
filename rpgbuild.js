@@ -9,11 +9,30 @@ const markdown = require('markdown').markdown;
 const configPath = "./rpgbuild.json";
 const argv = process.argv;
 
-var jobs = null;
+const cliArgs = processArguments(argv);
 
-function hasCommand(...args) {
+// sort cli arguments into flags and filepaths
+function processArguments(argv) {
+    var args = {
+        filePaths : [],
+        flags : []
+    };
+
+    // start at 2 because skipping first two
+    for(let i = 2; i < argv.length; i++) {
+        let c = argv[i];
+        if (c.startsWith('-')) {
+            args.flags.push(c);
+        } else {
+            args.filePaths.push(c);
+        }
+    }
+    return args;
+}
+
+function hasCliFlag(...args) {
     let exists = false;
-    argv.forEach(cmd => {
+    cliArgs.flags.forEach(cmd => {
         args.forEach(checkCmd => {
             if (cmd == checkCmd) {
                 exists = true;
@@ -23,24 +42,10 @@ function hasCommand(...args) {
     return exists;
 }
 
-// NOTE: adding these flags has caused a problem with
-// extracting the output filename, because it's using
-// a very simple parser that expects a too-specific
-// sequence of commands: 
-//  `rpgbuild` - with no arguments, 
-//  `rpgbuild inputfile.md`
-//  `rpgbuild inputfile.md outputfile.html`
-// SO, providing different arguments breaks the job by
-// accidentally inserting the third argument as an output filename
-// (eg `outputFile : "--dry-run"`)
-// NOTE: using dry run alone still "works" because
-// we are skipping the file output step so the bad output path is "ok"
-// but `verbose` is not properly supported.
-
-const isDryRun = hasCommand("--dry-run", "-dr");
+const isDryRun = hasCliFlag("--dry-run", "-dr");
 
 // TODO: verbose not properly supported due to bug in above comment
-const verbose = hasCommand("--verbose", "-v");
+const verbose = hasCliFlag("--verbose", "-v");
 
 if (isDryRun) {
     console.log("Dry run...");
@@ -49,18 +54,19 @@ if (verbose) {
     console.log("Verbose...");
 }
 
+var jobs = null;
+
 // Check to see if there are any commandline arguments, and attempt to
 // interpret them as input and output filenames
-if (argv.length > 2) {
-
-    var commands = argv.slice(2);
-    var pathToSourceFile = commands[0];
+if (cliArgs.filePaths.length > 0) {
+    var filePaths = cliArgs.filePaths;
+    var pathToSourceFile = filePaths[0];
     
     if (fs.existsSync(pathToSourceFile)) {
 
         jobs = [];
 
-        switch (commands.length) {
+        switch (filePaths.length) {
             case 1: 
             jobs.push({
                 sourceFile: pathToSourceFile,
@@ -69,7 +75,7 @@ if (argv.length > 2) {
             break;
 
             case 2: 
-            var outputPath = commands[1];
+            var outputPath = filePaths[1];
             if (pathToSourceFile == outputPath) {
                 console.log("Error - saving output to path would overwrite the input file! :", outputPath);
                 process.exit();
@@ -199,9 +205,9 @@ const d66Rolls = d66RollsString.split(',');
 var totalTablesGenerated = 0;
 
 jobs.forEach( (job) => {
-    // if (verbose) {
-    //     console.log("Job:", job);
-    // }
+    if (verbose) {
+        console.log("Job:", job);
+    }
 
     var data = "";
     // reset per job

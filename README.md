@@ -98,7 +98,9 @@ Example:
 
 `rpgbuild my-tables.md -dr`
 
-NOTE: This feature is not properly supported until the cli parser is updated. It should work with the above single-file example but may break with other syntax configurations.
+### Verbose (`--verbose` or `-v`)
+
+Using the flag `--verbose` or `-v` will cause the script to log additional information about jobs and stats.
 
 ### CSS Style
 
