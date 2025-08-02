@@ -43,9 +43,15 @@ function hasCliFlag(...args) {
 }
 
 const isDryRun = hasCliFlag("--dry-run", "-dr");
-
-// TODO: verbose not properly supported due to bug in above comment
 const verbose = hasCliFlag("--verbose", "-v");
+// const warn = hasCliFlag("--warn", "-w");
+
+const manualRequested = hasCliFlag("--man", "-m", "-h");
+
+if (manualRequested) {
+    printManual();
+    process.exit();
+}
 
 if (isDryRun) {
     console.log("Dry run...");
@@ -234,7 +240,7 @@ jobs.forEach( (job) => {
     const compiled = parse(data, job.title || "");
 
     if (!isDryRun) {
-        fs.writeFileSync(job.outputFile, compiled);
+        fs.writeFileSync(job.outputFile, compiled);        
     }
     
     console.log("Tables Generated:", totalTablesGenerated);
@@ -818,4 +824,37 @@ function isOutlineNote(s) {
             return c == '@';
         }
     }
+}
+
+
+
+function printManual() {
+
+    console.log(`
+RPG Build
+
+Usage - run command in directory containing \`rpgbuild.json\` config file: 
+
+    \`rpgbuild\`
+
+Format of \`rpgbuild.json\`
+
+  {
+    "title: ": "document_title",
+    "sourceFiles": [
+      "source/file1.md",
+      "source/file2.md"
+    ],
+    "outputFile": "./www/output.html"
+  }
+
+Files are parsed and conbined into the final output html file.
+
+Optional Arguments:
+
+    --man -m -h - This Manual
+    --verbose -v - Verbose Logging
+    --dry-run -dr - Dry Run    
+    `);
+
 }
