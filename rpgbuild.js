@@ -122,7 +122,13 @@ if (jobs == null) {
 
     // Load the config
     var config = fs.readFileSync(configPath);
-    jobs = JSON.parse(config);
+    try {
+        jobs = JSON.parse(config);
+    } catch (ex) {
+        console.log("JSON Parse Failed. Likely invalid JSON in `rpgbuild.json`. Aborting");
+        process.exit();
+    }
+    
 }
 
 const UnusedRangeStrategy = {
@@ -221,7 +227,13 @@ jobs.forEach( (job) => {
     if (job.hasOwnProperty("sourceFiles")) {
         var allData = [];
         job.sourceFiles.forEach((sourceFile)=>{
-            var fileData = fs.readFileSync(sourceFile, {encoding:'utf8', flag:'r'});
+            try {
+                var fileData = fs.readFileSync(sourceFile, {encoding:'utf8', flag:'r'});
+            } catch {
+                console.log("Failed to load file", sourceFile, "Aborting...");
+                process.exit();
+            }
+                
 
             // if the data does not have a line break at the end, add one
             // otherwise, if the file ends with [end_table], we may lose
