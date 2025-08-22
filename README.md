@@ -140,8 +140,8 @@ Die numbers are automatically added. Unused table "slots" will be rendered, but 
 For longer lists using d6 only, use d666 tables.
 
 `[table_d666]` - a d666 table with 216 entries.  
-`[table_d666twos]` - a d666 table with 108 entries.  
-`[table_d666threes]` - a d66 table with 72 entries.  
+`[table_d666twos]` - a d666 table with 108 ranged entries.  
+`[table_d666threes]` - a d66 table with 72 ranged entries.  
 
 ### Sequential List Table
 
