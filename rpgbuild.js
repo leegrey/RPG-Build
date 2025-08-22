@@ -210,8 +210,15 @@ const commandHeuristics = [
 ];
 
 const d66RollsString = "11,12,13,14,15,16,21,22,23,24,25,26,31,32,33,34,35,36,41,42,43,44,45,46,51,52,53,54,55,56,61,62,63,64,65,66";
+const d666RollsString = "111,112,113,114,115,116,121,122,123,124,125,126,131,132,133,134,135,136,141,142,143,144,145,146,151,152,153,154,155,156,161,162,163,164,165,166,211,212,213,214,215,216,221,222,223,224,225,226,231,232,233,234,235,236,241,242,243,244,245,246,251,252,253,254,255,256,261,262,263,264,265,266,311,312,313,314,315,316,321,322,323,324,325,326,331,332,333,334,335,336,341,342,343,344,345,346,351,352,353,354,355,356,361,362,363,364,365,366,411,412,413,414,415,416,421,422,423,424,425,426,431,432,433,434,435,436,441,442,443,444,445,446,451,452,453,454,455,456,461,462,463,464,465,466,511,512,513,514,515,516,521,522,523,524,525,526,531,532,533,534,535,536,541,542,543,544,545,546,551,552,553,554,555,556,561,562,563,564,565,566,611,612,613,614,615,616,621,622,623,624,625,626,631,632,633,634,635,636,641,642,643,644,645,646,651,652,653,654,655,656,661,662,663,664,665,666";
+const d666TwosRollsString = "111-112, 113-114, 115-116, 121-122, 123-124, 125-126, 131-132, 133-134, 135-136, 141-142, 143-144, 145-146, 151-152, 153-154, 155-156, 161-162, 163-164, 165-166, 211-212, 213-214, 215-216, 221-222, 223-224, 225-226, 231-232, 233-234, 235-236, 241-242, 243-244, 245-246, 251-252, 253-254, 255-256, 261-262, 263-264, 265-266, 311-312, 313-314, 315-316, 321-322, 323-324, 325-326, 331-332, 333-334, 335-336, 341-342, 343-344, 345-346, 351-352, 353-354, 355-356, 361-362, 363-364, 365-366, 411-412, 413-414, 415-416, 421-422, 423-424, 425-426, 431-432, 433-434, 435-436, 441-442, 443-444, 445-446, 451-452, 453-454, 455-456, 461-462, 463-464, 465-466, 511-512, 513-514, 515-516, 521-522, 523-524, 525-526, 531-532, 533-534, 535-536, 541-542, 543-544, 545-546, 551-552, 553-554, 555-556, 561-562, 563-564, 565-566, 611-612, 613-614, 615-616, 621-622, 623-624, 625-626, 631-632, 633-634, 635-636, 641-642, 643-644, 645-646, 651-652, 653-654, 655-656, 661-662, 663-664, 665-666";
+const d666ThreesString = "111-113, 114-116, 121-123, 124-126, 131-133, 134-136, 141-143, 144-146, 151-153, 154-156, 161-163, 164-166, 211-213, 214-216, 221-223, 224-226, 231-233, 234-236, 241-243, 244-246, 251-253, 254-256, 261-263, 264-266, 311-313, 314-316, 321-323, 324-326, 331-333, 334-336, 341-343, 344-346, 351-353, 354-356, 361-363, 364-366, 411-413, 414-416, 421-423, 424-426, 431-433, 434-436, 441-443, 444-446, 451-453, 454-456, 461-463, 464-466, 511-513, 514-516, 521-523, 524-526, 531-533, 534-536, 541-543, 544-546, 551-553, 554-556, 561-563, 564-566, 611-613, 614-616, 621-623, 624-626, 631-633, 634-636, 641-643, 644-646, 651-653, 654-656, 661-663, 664-666"
+
 const d66Rolls = d66RollsString.split(',');
-    
+const d666Rolls = d666RollsString.split(',');
+const d666TwosRolls = d666TwosRollsString.split(',');
+const d666ThreesRolls = d666ThreesString.split(',');
+
 /// MAIN Execution //////
 
 var totalTablesGenerated = 0;
@@ -351,11 +358,25 @@ function parse(data, title = "") {
             var tableLines = [];
             var linesConsumed = 0;
 
+
             // process commands:
-            if (line.includes("[table_d66")) {
-                linesConsumed = generateTableD66Auto(lines, lineIndex + 1, tableLines, autoColumns);
+
+            if (line.includes("[table_d666twos")) {
+                linesConsumed = generateTableD666Twos(lines, lineIndex + 1, tableLines, autoColumns);
+            }
+            else if (line.includes("[table_d666threes")) {
+                linesConsumed = generateTableD666Threes(lines, lineIndex + 1, tableLines, autoColumns);
             }
 
+            else if (line.includes("[table_d666")) {
+                linesConsumed = generateTableD666(lines, lineIndex + 1, tableLines, autoColumns);
+            }
+
+            else if (line.includes("[table_d66")) {
+                linesConsumed = generateTableD66(lines, lineIndex + 1, tableLines, autoColumns);
+            }
+
+            
             // NOTE: removing this older functionality
             // may bring it back as `table_d66_raw` or something...
             // else if (line.includes("[table_d66")) {
@@ -682,9 +703,9 @@ function generatePolydieAutoTable(lines, lineIndex, tableLines, columns = 3) {
         linesConsumed = generateSequentialNumberedTable(lines, lineIndex, tableLines, columns);
         break;
         
-        case 36:
+        case d66Rolls.length:
         // 36 items is a good fit for a d66 table
-        linesConsumed = generateTableD66Auto(lines, lineIndex, tableLines, columns);
+        linesConsumed = generateTableD66(lines, lineIndex, tableLines, columns);
         break;
 
         default:
@@ -696,7 +717,31 @@ function generatePolydieAutoTable(lines, lineIndex, tableLines, columns = 3) {
     return linesConsumed;
 }
 
-function generateTableD66Auto(lines, lineIndex, tableLines, columns = 3) {
+function generateTableD66(lines, lineIndex, tableLines, columns = 3) {
+    return generateTableLabeled(lines, lineIndex, tableLines, d66Rolls, d66Spacer, "d66", columns);
+}
+
+function generateTableD666(lines, lineIndex, tableLines, columns = 3) {
+   return  generateTableLabeled(lines, lineIndex, tableLines, d666Rolls, d66Spacer, "d666", columns);
+}
+
+function generateTableD666Twos(lines, lineIndex, tableLines, columns = 3) {
+   return  generateTableLabeled(lines, lineIndex, tableLines, d666TwosRolls, d66Spacer, "d666", columns);
+}
+
+function generateTableD666Threes(lines, lineIndex, tableLines, columns = 3) {
+   return  generateTableLabeled(lines, lineIndex, tableLines, d666ThreesRolls, d66Spacer, "d666", columns);
+}
+
+
+
+function generateTableLabeled(
+    lines, lineIndex, tableLines, 
+    labels,
+    useSpacer,
+    tableTypeName,
+    columns = 3
+) {
 
     var endIndex = seekTableEnd(lines, lineIndex);
 
@@ -714,27 +759,28 @@ function generateTableD66Auto(lines, lineIndex, tableLines, columns = 3) {
     // build a basic list of numbered items before creating 
     // the final table lines
     var itemLines = [];
+    var itemLength = labels.length;
 
     // build a list of spacer lines for this number of coumns
-    var d66SpacerLines = [];
-    if (d66Spacer) {
-        var itemsPerColumn = Math.ceil( 36 / columns);
+    var spacerLines = [];
+    if (useSpacer) {
+        var itemsPerColumn = Math.ceil( itemLength / columns);
         for (let i = 0; i < columns; i++) {
             var spacersRequired = Math.ceil(itemsPerColumn / 6) - 1;
             for (let ig = 0; ig < spacersRequired; ig++) {
-                d66SpacerLines.push(i*itemsPerColumn + ig * 6 + 6);
+                spacerLines.push(i*itemsPerColumn + ig * 6 + 6);
             }
         }
     }
 
     // keep this outside the loop so we can look at it later.
     var rangeEnd = 0;
-    for (let i = 0; i < 36; i++) {
+    for (let i = 0; i < itemLength; i++) {
 
-        var line = "<b>" +  d66Rolls[i] + "</b> - ";
+        var line = "<b>" +  labels[i] + "</b> - ";
         if (validLines.length > i) {
 
-            if (d66Spacer && d66SpacerLines.indexOf(i) != -1) {
+            if (useSpacer && spacerLines.indexOf(i) != -1) {
                 itemLines.push("<div> &nbsp; </div>");
             }
 
@@ -745,10 +791,25 @@ function generateTableD66Auto(lines, lineIndex, tableLines, columns = 3) {
     }
     
     // Finally, build the multi-column table
-    buildMultiColumnTable(itemLines, tableLines, columns, "d66", validLines.length);
+    buildMultiColumnTable(itemLines, tableLines, columns, tableTypeName, validLines.length);
 
     return linesConsumed;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function generateSequentialNumberedTable(lines, lineIndex, tableLines, columns = 3) {

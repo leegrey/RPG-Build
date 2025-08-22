@@ -135,6 +135,14 @@ D66 tables have 36 items.
 
 Die numbers are automatically added. Unused table "slots" will be rendered, but left blank.
 
+### D666 lists:
+
+For longer lists using d6 only, use d666 tables.
+
+`[table_d666]` - a d666 table with 216 entries
+`[table_d666twos]` - a d666 table with 108 entries
+`[table_d666threes]` - a d66 table with 72 entries
+
 ### Sequential List Table
 
 To generate a table with sequentially numbered items:
