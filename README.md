@@ -102,6 +102,12 @@ Example:
 
 Using the flag `--verbose` or `-v` will cause the script to log additional information about jobs and stats.
 
+### Output Lists (`--list` or `-ls`)
+
+Using the flag `--list` or `-ls` will output simple lists. This is useful if opening / pasting content in some publishing software. (For example if laying out in Affinity Publisher using columns.)
+
+Table structure is wrapped in `<div>` tags. 
+
 ### CSS Style
 
 The output html files contain a reference to an external style sheet, called `style.css`. The example project supplies an example style sheet, which can be customised as needed.
