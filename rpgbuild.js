@@ -11,7 +11,6 @@ const argv = process.argv;
 
 const cliArgs = processArguments(argv);
 
-
 // sort cli arguments into flags and filepaths
 function processArguments(argv) {
     var args = {
@@ -148,6 +147,8 @@ var defaultAutoColumns = 1;
 var d66Spacer = false;
 var renderDieType = true;
 var renderItemCount = true;
+var printWarningsInDocument = true;
+
 
 var htmlHead = `
 <!DOCTYPE html>
@@ -475,7 +476,6 @@ function processSet(commandString) {
             break;
 
         case "d66_spacer":
-       
             if (tokens.length < 3) { 
                 console.log("Invalid:", commandString);
                 return; 
@@ -498,8 +498,6 @@ function processSet(commandString) {
             break;
     }
 }
-
-
 
 function generateRawChunk(lines, lineIndex, tableLines) {
     var endIndex = lineIndex;
@@ -746,8 +744,6 @@ function generateTableD666Threes(lines, lineIndex, tableLines, columns = 3) {
    return  generateTableLabeled(lines, lineIndex, tableLines, d666ThreesRolls, d66Spacer, "d666", columns);
 }
 
-
-
 function generateTableLabeled(
     lines, lineIndex, tableLines, 
     labels,
@@ -810,21 +806,6 @@ function generateTableLabeled(
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function generateSequentialNumberedTable(lines, lineIndex, tableLines, columns = 3) {
     var endIndex = seekTableEnd(lines, lineIndex);
 
@@ -868,11 +849,32 @@ function buildMultiColumnTable(itemLines, tableLines, columns, rollType, validIt
         console.log("Table item count:", validItemsCount);
     }
 
-    if (renderDieType) {
-        tableLines.push(`<div><b>` + rollType + `</b> (<i>${validItemsCount} items</i>)</div>`);
+    var tableItemsMax = columns * itemsPerColumn; 
+    //console.log("size: ", validItemsCount, "/", tableItemsMax);
+    if (validItemsCount > tableItemsMax) {
+        console.log("Warning, some items are hidden ", validItemsCount, "/", tableItemsMax);
     }
+
+    if (renderDieType) {
+        if (renderItemCount) {
+            tableLines.push(`<div><b>` + rollType + `</b> (<i>${validItemsCount} items</i>)</div>`);        
+        } else {
+            tableLines.push(`<div><b>` + rollType + `</b> </div>`);        
+        }
+    }
+
+    if (printWarningsInDocument) {
+        // warn about oversized arrays
+        if (validItemsCount > tableItemsMax) {
+            var numberHidden = validItemsCount - tableItemsMax;
+            tableLines.push(`<div><b>WARNING</b> - ${numberHidden} items hidden (max. capacity: ${tableItemsMax} )</div>`);
+        }
+    }
+
+
     tableLines.push(tableHead);
     tableLines.push(trHead);
+
 
     for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
         tableLines.push(customTdHead);
