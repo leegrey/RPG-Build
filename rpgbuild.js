@@ -635,7 +635,6 @@ function collectValidLines(lines, startIndex, endIndex) {
     }
 
     if (shuffleItems) {
-        console.log("Shuffling items");
         shuffleArray(validLines);
     }
      
@@ -858,7 +857,6 @@ function generateSequentialNumberedTable(lines, lineIndex, tableLines, columns =
 }
 
 function shuffleArray(array) {
-    console.log(array)
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
