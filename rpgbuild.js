@@ -129,7 +129,6 @@ if (jobs == null) {
         console.log("JSON Parse Failed. Likely invalid JSON in `rpgbuild.json`. Aborting");
         process.exit();
     }
-    
 }
 
 const UnusedRangeStrategy = {
@@ -225,25 +224,24 @@ const commandHeuristics = [
 
 const d66RollsString = "11,12,13,14,15,16,21,22,23,24,25,26,31,32,33,34,35,36,41,42,43,44,45,46,51,52,53,54,55,56,61,62,63,64,65,66";
 const d666RollsString = "111,112,113,114,115,116,121,122,123,124,125,126,131,132,133,134,135,136,141,142,143,144,145,146,151,152,153,154,155,156,161,162,163,164,165,166,211,212,213,214,215,216,221,222,223,224,225,226,231,232,233,234,235,236,241,242,243,244,245,246,251,252,253,254,255,256,261,262,263,264,265,266,311,312,313,314,315,316,321,322,323,324,325,326,331,332,333,334,335,336,341,342,343,344,345,346,351,352,353,354,355,356,361,362,363,364,365,366,411,412,413,414,415,416,421,422,423,424,425,426,431,432,433,434,435,436,441,442,443,444,445,446,451,452,453,454,455,456,461,462,463,464,465,466,511,512,513,514,515,516,521,522,523,524,525,526,531,532,533,534,535,536,541,542,543,544,545,546,551,552,553,554,555,556,561,562,563,564,565,566,611,612,613,614,615,616,621,622,623,624,625,626,631,632,633,634,635,636,641,642,643,644,645,646,651,652,653,654,655,656,661,662,663,664,665,666";
-
-// full ranges
 const d666TwosRollsString = "111-112,113-114,115-116,121-122,123-124,125-126,131-132,133-134,135-136,141-142,143-144,145-146,151-152,153-154,155-156,161-162,163-164,165-166,211-212,213-214,215-216,221-222,223-224,225-226,231-232,233-234,235-236,241-242,243-244,245-246,251-252,253-254,255-256,261-262,263-264,265-266,311-312,313-314,315-316,321-322,323-324,325-326,331-332,333-334,335-336,341-342,343-344,345-346,351-352,353-354,355-356,361-362,363-364,365-366,411-412,413-414,415-416,421-422,423-424,425-426,431-432,433-434,435-436,441-442,443-444,445-446,451-452,453-454,455-456,461-462,463-464,465-466,511-512,513-514,515-516,521-522,523-524,525-526,531-532,533-534,535-536,541-542,543-544,545-546,551-552,553-554,555-556,561-562,563-564,565-566,611-612,613-614,615-616,621-622,623-624,625-626,631-632,633-634,635-636,641-642,643-644,645-646,651-652,653-654,655-656,661-662,663-664,665-666";
 const d666ThreesString = "111-113,114-116,121-123,124-126,131-133,134-136,141-143,144-146,151-153,154-156,161-163,164-166,211-213,214-216,221-223,224-226,231-233,234-236,241-243,244-246,251-253,254-256,261-263,264-266,311-313,314-316,321-323,324-326,331-333,334-336,341-343,344-346,351-353,354-356,361-363,364-366,411-413,414-416,421-423,424-426,431-433,434-436,441-443,444-446,451-453,454-456,461-463,464-466,511-513,514-516,521-523,524-526,531-533,534-536,541-543,544-546,551-553,554-556,561-563,564-566,611-613,614-616,621-623,624-626,631-633,634-636,641-643,644-646,651-653,654-656,661-663,664-666";
 
-// abbreviated form...
+// abbreviated form... (save space but less readable)
 // const d666TwosRollsString = "111-2,113-4,115-6,121-2,123-4,125-6,131-2,133-4,135-6,141-2,143-4,145-6,151-2,153-4,155-6,161-2,163-4,165-6,211-2,213-4,215-6,221-2,223-4,225-6,231-2,233-4,235-6,241-2,243-4,245-6,251-2,253-4,255-6,261-2,263-4,265-6,311-2,313-4,315-6,321-2,323-4,325-6,331-2,333-4,335-6,341-2,343-4,345-6,351-2,353-4,355-6,361-2,363-4,365-6,411-2,413-4,415-6,421-2,423-4,425-6,431-2,433-4,435-6,441-2,443-4,445-6,451-2,453-4,455-6,461-2,463-4,465-6,511-2,513-4,515-6,521-2,523-4,525-6,531-2,533-4,535-6,541-2,543-4,545-6,551-2,553-4,555-6,561-2,563-4,565-6,611-2,613-4,615-6,621-2,623-4,625-6,631-2,633-4,635-6,641-2,643-4,645-6,651-2,653-4,655-6,661-2,663-4,665-6";
 // const d666ThreesString = "111-3,114-6,121-3,124-6,131-3,134-6,141-3,144-6,151-3,154-6,161-3,164-6,211-3,214-6,221-3,224-6,231-3,234-6,241-3,244-6,251-3,254-6,261-3,264-6,311-3,314-6,321-3,324-6,331-3,334-6,341-3,344-6,351-3,354-6,361-3,364-6,411-3,414-6,421-3,424-6,431-3,434-6,441-3,444-6,451-3,454-6,461-3,464-6,511-3,514-6,521-3,524-6,531-3,534-6,541-3,544-6,551-3,554-6,561-3,564-6,611-3,614-6,621-3,624-6,631-3,634-6,641-3,644-6,651-3,654-6,661-3,664-6";
-
-
 
 const d66Rolls = d66RollsString.split(',');
 const d666Rolls = d666RollsString.split(',');
 const d666TwosRolls = d666TwosRollsString.split(',');
 const d666ThreesRolls = d666ThreesString.split(',');
 
+
 /// MAIN Execution //////
 
 var totalTablesGenerated = 0;
+// used for debug log context...
+var currentSectionHeader = "";
 
 jobs.forEach( (job) => {
     if (verbose) {
@@ -277,8 +275,6 @@ jobs.forEach( (job) => {
         data = fs.readFileSync(job.sourceFile, {encoding:'utf8', flag:'r'});        
     } 
 
-    // The downside of joining all the files together and parsing in a single pass
-    // is that I cannot print useful logs that tell me which files have problems, etc...
     const compiled = parse(data, job.title || "");
 
     if (!isDryRun) {
@@ -341,14 +337,13 @@ function parse(data, title = "") {
     // split the input into individual lines    
     var lines = data.split("\n");
 
-    // TODO: parse and remove comment lines
+    // parse and remove comment lines
     lines = removeCommentedLines(lines);
 
     // "inserts" are info used to hold generated preprocessor 
     // html data, to be inserted into the 
     // final html after parsing with markdown
     var inserts = [];
-
     var outputLines = [];
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
@@ -359,6 +354,13 @@ function parse(data, title = "") {
         // in a text outliner, but for it to be removed at compile
         if (isOutlineNote(line)) {
             continue;
+        }
+
+        if (line.startsWith("#")) {
+            let regex = new RegExp("#", 'g');
+            currentSectionHeader = line.replace(regex, '').trim()
+            //remove endlines
+            .replace(/[\n\r\t]/gm, "");
         }
 
         // if a line contains custom markup
@@ -375,17 +377,13 @@ function parse(data, title = "") {
                 if (!isNaN(parsedColumns)) {
                     autoColumns = parsedColumns;
                 }
-
                 // set shuffle items for this table
                 shuffleItems = line.includes('rnd');
-
             }
-
 
             // a target array to pass to hold the resulting table lines
             var tableLines = [];
             var linesConsumed = 0;
-
 
             // process commands:
             line = line.toLowerCase();
@@ -395,22 +393,12 @@ function parse(data, title = "") {
             else if (line.includes("[table_d666threes")) {
                 linesConsumed = generateTableD666Threes(lines, lineIndex + 1, tableLines, autoColumns);
             }
-
             else if (line.includes("[table_d666")) {
                 linesConsumed = generateTableD666(lines, lineIndex + 1, tableLines, autoColumns);
             }
-
             else if (line.includes("[table_d66")) {
                 linesConsumed = generateTableD66(lines, lineIndex + 1, tableLines, autoColumns);
             }
-
-            
-            // NOTE: removing this older functionality
-            // may bring it back as `table_d66_raw` or something...
-            // else if (line.includes("[table_d66")) {
-            //     linesConsumed = generateTableD66(lines, lineIndex + 1, 36, 3, 12, tableLines);
-            // } 
-
             else if (line.includes("[table_d100")) {
                 linesConsumed = generateAutoD100(lines, lineIndex + 1, tableLines, autoColumns);
             } else if (line.includes("[table_seq")) {
@@ -571,12 +559,10 @@ function removeAllWhitespace(s) {
 }
 
 function isOutlineNote(s) {
-
     // if it's not a hash, then it's not an outline note
     if (s[0] != '#') {
         return false;
     }
-
     // find the first character that isn't a hash or a space
     // and if it's an `@`, it's an Outline Note
     for (var i = 1; i < s.length; i++) {
@@ -628,7 +614,8 @@ function collectValidLines(lines, startIndex, endIndex) {
 
         // check for duplicate entries
         if (hash.has(line)) {
-            console.log("Warning - duplicate entry encountered:", line);
+            console.log("Context: " + currentSectionHeader );
+            console.log(`Warning - duplicate entry encountered: ${line.trim()}`);
         }
 
         hash.set(line, true);
@@ -656,9 +643,17 @@ function generateAutoD100(lines, lineIndex, tableLines, columns = 3) {
     var validLines = collectValidLines(lines, lineIndex, endIndex);
     var stride = Math.floor(100 / validLines.length);
 
+    if (stride < 1) {
+        stride = 1;
+    }
+
     // build a basic list of numbered items before creating 
     // the final table lines
     var itemLines = [];
+
+    if (validLines.length > 100) {
+        console.log(`WARNING, d100 has more than 100 lines (${validLines.length})`);
+    }
 
     // keep this outside the loop so we can look at it later.
     var rangeEnd = 0;
@@ -942,7 +937,6 @@ function isOutlineNote(s) {
         }
     }
 }
-
 
 
 function printManual() {
