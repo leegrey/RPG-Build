@@ -11,6 +11,18 @@ const argv = process.argv;
 
 const cliArgs = processArguments(argv);
 
+const Yellow = '\x1b[33m';
+const Red = '\x1b[31m';
+const ColorReset = '\x1b[0m';
+
+function logWarning(...args) {
+  console.log(Yellow + args.join(' ') + ColorReset);
+}
+
+function logError(...args) {
+  console.log(Red + args.join(' ') + ColorReset);
+}
+
 // sort cli arguments into flags and filepaths
 function processArguments(argv) {
     var args = {
@@ -84,7 +96,7 @@ if (cliArgs.filePaths.length > 0) {
             case 2: 
             var outputPath = filePaths[1];
             if (pathToSourceFile == outputPath) {
-                console.log("Error - saving output to path would overwrite the input file! :", outputPath);
+                logError("Error - saving output to path would overwrite the input file! :", outputPath);
                 process.exit();
             }
 
@@ -117,7 +129,7 @@ if (jobs == null) {
 
     // check if the config file exists
     if (!fs.existsSync(configPath)) {
-        console.log("Error - ", configPath, " was not found.");
+        logError("Error - ", configPath, " was not found.");
         process.exit();
     }
 
@@ -126,7 +138,7 @@ if (jobs == null) {
     try {
         jobs = JSON.parse(config);
     } catch (ex) {
-        console.log("JSON Parse Failed. Likely invalid JSON in `rpgbuild.json`. Aborting");
+        logError("JSON Parse Failed. Likely invalid JSON in `rpgbuild.json`. Aborting");
         process.exit();
     }
 }
@@ -245,7 +257,7 @@ var currentSectionHeader = "";
 
 jobs.forEach( (job) => {
     if (verbose) {
-        console.log("Job:", job);
+        console.log("Job:", job.title, "/", job.outputFile);
     }
 
     var data = "";
@@ -257,7 +269,7 @@ jobs.forEach( (job) => {
             try {
                 var fileData = fs.readFileSync(sourceFile, {encoding:'utf8', flag:'r'});
             } catch {
-                console.log("FAILED to load file", sourceFile, "Aborting...");
+                logError("FAILED to load file", sourceFile, "Aborting...");
                 process.exit();
             }
 
@@ -465,12 +477,12 @@ function processSet(commandString) {
     switch (target) {
         case "default_columns":
             if (tokens.length < 3) { 
-                console.log("Invalid:", commandString);
+                logError("Invalid:", commandString);
                 return; 
             } 
             var newValue = parseInt(tokens[2]);
             if (isNaN(newValue)) {
-                console.log("Invalid (isNan):", commandString);
+                logError("Invalid (isNan):", commandString);
             } else {
                 // TODO: i could make this a push/pop ??
                 defaultAutoColumns = newValue;
@@ -479,7 +491,7 @@ function processSet(commandString) {
 
         case "d66_spacer":
             if (tokens.length < 3) { 
-                console.log("Invalid:", commandString);
+                logError("Invalid:", commandString);
                 return; 
             } 
             var boolString = removeAllWhitespace(tokens[2]);
@@ -488,7 +500,7 @@ function processSet(commandString) {
 
          case "render_die_type":
             if (tokens.length < 3) { 
-                console.log("Invalid:", commandString);
+                logError("Invalid:", commandString);
                 return; 
             } 
             var boolString = removeAllWhitespace(tokens[2]);
@@ -496,7 +508,7 @@ function processSet(commandString) {
             break;
 
         default:
-            console.log("Unknown set:", commandString);
+            logError("Unknown set:", commandString);
             break;
     }
 }
@@ -523,12 +535,12 @@ function generateTableD66(lines, start, size, columns, rows, output) {
     output.push(tableHead);
 
     if (start >= lines.length) {
-        console.log("start is out of index", start, "/" , size);
+        logError("start is out of index", start, "/" , size);
         return 0;
     }
 
     if (start + size >= lines.length) {
-        console.log("Truncating table size, not enough data to fill", start, "/" , size);
+        logError("Truncating table size, not enough data to fill", start, "/" , size);
         return 0;
     }
 
@@ -614,8 +626,8 @@ function collectValidLines(lines, startIndex, endIndex) {
 
         // check for duplicate entries
         if (hash.has(line)) {
-            console.log("Context: " + currentSectionHeader );
-            console.log(`Warning - duplicate entry encountered: ${line.trim()}`);
+            //console.log("Context: " + currentSectionHeader );
+            logWarning(`WARNING - duplicate entry: "${line.trim()}" in "${currentSectionHeader}" `);
         }
 
         hash.set(line, true);
@@ -652,7 +664,7 @@ function generateAutoD100(lines, lineIndex, tableLines, columns = 3) {
     var itemLines = [];
 
     if (validLines.length > 100) {
-        console.log(`WARNING, d100 has more than 100 lines (${validLines.length})`);
+        logWarning(`WARNING, d100 has more than 100 lines (${validLines.length})`);
     }
 
     // keep this outside the loop so we can look at it later.
@@ -870,13 +882,13 @@ function buildMultiColumnTable(
         Math.floor(100 / columns) + "%" );
 
     if (verbose) {
-        console.log("Table item count:", validItemsCount);
+        console.log("Table item count:", validItemsCount, "Context:", currentSectionHeader );
     }
 
     var tableItemsMax = columns * itemsPerColumn; 
     //console.log("size: ", validItemsCount, "/", tableItemsMax);
     if (validItemsCount > tableItemsMax) {
-        console.log("Warning, some items are hidden ", validItemsCount, "/", tableItemsMax);
+        logWarning("Warning, some items are hidden ", validItemsCount, "/", tableItemsMax);
     }
 
     if (renderDieType) {
