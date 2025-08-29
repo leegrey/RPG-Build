@@ -137,8 +137,6 @@ if (jobs == null) {
     var config = fs.readFileSync(configPath, 'utf8');
     try {
         config = preprocessJson(config);
-        console.log(config)
-        
         jobs = JSON.parse(config);
     } catch (ex) {
         logError("JSON Parse Failed. Likely invalid JSON in `rpgbuild.json`. Aborting");
