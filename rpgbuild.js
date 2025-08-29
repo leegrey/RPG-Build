@@ -134,8 +134,11 @@ if (jobs == null) {
     }
 
     // Load the config
-    var config = fs.readFileSync(configPath);
+    var config = fs.readFileSync(configPath, 'utf8');
     try {
+        config = preprocessJson(config);
+        console.log(config)
+        
         jobs = JSON.parse(config);
     } catch (ex) {
         logError("JSON Parse Failed. Likely invalid JSON in `rpgbuild.json`. Aborting");
@@ -148,6 +151,13 @@ const UnusedRangeStrategy = {
   ExpandLastItem: 'ExpandLastItem',
   RollAgain: 'RollAgain'
 };
+
+function preprocessJson(json) {
+    var lines = json.split("\n");
+    lines = removeCommentedLines(lines);
+    json = lines.join("\n");
+    return stripHtmlComments(json);
+}
 
 var unusedRangeStrategy = UnusedRangeStrategy.RollAgain;
 
@@ -627,7 +637,7 @@ function collectValidLines(lines, startIndex, endIndex) {
         // check for duplicate entries
         if (hash.has(line)) {
             //console.log("Context: " + currentSectionHeader );
-            logWarning(`WARNING - duplicate entry: "${line.trim()}" in "${currentSectionHeader}" `);
+            logWarning(`WARNING - Duplicate: "${line.trim()}" in "${currentSectionHeader}" `);
         }
 
         hash.set(line, true);
