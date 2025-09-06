@@ -151,6 +151,8 @@ const UnusedRangeStrategy = {
 };
 
 function preprocessJson(json) {
+    // remove commented lines from the json
+    // (since json format doesn't support comments natively)
     var lines = json.split("\n");
     lines = removeCommentedLines(lines);
     json = lines.join("\n");
@@ -276,6 +278,7 @@ jobs.forEach( (job) => {
         job.sourceFiles.forEach((sourceFile)=>{
             try {
                 var fileData = fs.readFileSync(sourceFile, {encoding:'utf8', flag:'r'});
+                fileData = stripHtmlComments(fileData);
             } catch {
                 logError("FAILED to load file", sourceFile, "Aborting...");
                 process.exit();
@@ -353,12 +356,23 @@ function removeCommentedLines(lines) {
     return stripped;
 }
 
+function removeCommentedLineEndings(lines) {
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        var commentIndex = line.indexOf("//");
+        if (commentIndex >= 0) {
+            lines[i] = line.substring(0, commentIndex);
+        }
+    }
+}
+
 function parse(data, title = "") {
     // split the input into individual lines    
     var lines = data.split("\n");
 
     // parse and remove comment lines
     lines = removeCommentedLines(lines);
+    removeCommentedLineEndings(lines);
 
     // "inserts" are info used to hold generated preprocessor 
     // html data, to be inserted into the 
@@ -457,8 +471,7 @@ function parse(data, title = "") {
     var finalOutput = "";
     // build a string from all the lines
     finalOutput += outputLines.join("\n");
-    // remove html comments from the input before running markdown
-    finalOutput = stripHtmlComments(finalOutput);
+    
     // parse the markdown of the remaining text
     var finalOutput = markdown.toHTML(finalOutput);
     // replace all the table markers with the actual table html
@@ -672,7 +685,7 @@ function generateAutoD100(lines, lineIndex, tableLines, columns = 3) {
     var itemLines = [];
 
     if (validLines.length > 100) {
-        logWarning(`WARNING, d100 has more than 100 lines (${validLines.length})`);
+        logWarning(`WARNING, d100 has more than 100 lines (${validLines.length} lines) Context: ${currentSectionHeader})`);
     }
 
     // keep this outside the loop so we can look at it later.
@@ -890,13 +903,14 @@ function buildMultiColumnTable(
         Math.floor(100 / columns) + "%" );
 
     if (verbose) {
-        console.log("Table item count:", validItemsCount, "Context:", currentSectionHeader );
+        console.log(`Table item count: ${validItemsCount} (${rollType}) Context: ${currentSectionHeader}`);
+        //console.log("Table item count:", validItemsCount, `(${rollType})`, "Context:", currentSectionHeader );
     }
 
     var tableItemsMax = columns * itemsPerColumn; 
     //console.log("size: ", validItemsCount, "/", tableItemsMax);
     if (validItemsCount > tableItemsMax) {
-        logWarning("Warning, some items are hidden ", validItemsCount, "/", tableItemsMax);
+        logWarning(`Warning, some items are hidden ${validItemsCount} / ${tableItemsMax} Context: ${currentSectionHeader}`);
     }
 
     if (renderDieType) {
