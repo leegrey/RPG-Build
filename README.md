@@ -45,7 +45,7 @@ To supply a custom output file path, provide a second argument specifying the pa
 
 Note that you can use doublequotes to refer to documents with spaces in their names:
 
-`rpgbuild "filename with spaces.md".md "My Game.html"`
+`rpgbuild "filename with spaces.md" "My Game.html"`
 
 ### Configure Jobs with `rpgbuild.json`
 
