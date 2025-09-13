@@ -238,7 +238,9 @@ Inline tables or other html content can be wrapped in `[raw]` and `[end_raw]` ta
 
 `<!-- html style comments -->` are supported.
 
-In table lists, double slash comments (`// like this`) are supported for exluding items from the table.
+In table lists, double slash comments (`// like this`) are supported for excluding items from the table.
+
+The `rpgbuild.json` file also supports comments. (Comments are not normally a supported feature of JSON, but the files are pre-processed before parsing to strip all comments.)
 
 ### Outliner Notes
 
