@@ -6,10 +6,16 @@ Web-app Version [here](https://mothteeth.com/apps/rpgbuild/) (NOTE: somewhat out
 
 *Main functionality*:
 
-- automatically generate html tables from unformatted lists of items.
-- automatically assign dice roll-ranges to items based on item count.
+- Automatically generate html tables from unformatted lists of items.
+- Automatically assign dice roll-ranges to items based on item count.
+- Auto mode to "pick best die" for lists of varied size.
+- Multiple modes - all polyhedral dice, d66, d666, sequential.
+- Option to randomly shuffle tables.
+- Warn about duplicate entries.
+- Word frequency analysis (report entries found across multiple tables).
+- JSON project file - compile multiple markdown files into single html output file.
 
-It supports all standard polyhedral dice, d66, and d100 percentile tables, as well as a full-auto mode that attempts to find the best match for a given number of items. This automatic behaviour is useful during development, as it aids play testing with incomplete tables, and minimises maintenance time when adding or removing items.
+It supports all standard polyhedral dice, d66, d666, and d100 percentile tables, as well as a full-auto mode that attempts to find the best match for a given number of items. This automatic behaviour is useful during development, as it aids play testing with incomplete tables, and minimises maintenance time when adding or removing items.
 
 *The following is a screenshot of a d66 table:*
 
