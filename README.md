@@ -2,7 +2,7 @@
 
 This is a markdown preprocessor for generating roleplaying content in markdown format.
 
-Web-app Version [here](https://mothteeth.com/apps/rpgbuild/) 
+Web-app Version [here](https://mothteeth.com/apps/rpgbuild/) (NOTE: somewhat out of date, missing recent features.)
 
 *Main functionality*:
 
