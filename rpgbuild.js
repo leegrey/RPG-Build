@@ -57,6 +57,7 @@ function hasCliFlag(...args) {
 const isDryRun = hasCliFlag("--dry-run", "-dr");
 const verbose = hasCliFlag("--verbose", "-v");
 const outputLists = hasCliFlag("--list", "-ls");
+const doWordFrequency = hasCliFlag("-wordfrequency", "-wf");
 // const warn = hasCliFlag("--warn", "-w");
 
 const manualRequested = hasCliFlag("--man", "-m", "-h");
@@ -265,6 +266,11 @@ var totalTablesGenerated = 0;
 // used for debug log context...
 var currentSectionHeader = "";
 
+var tableData = {
+    tableWords : [],
+    tablesByTitle : {}
+};
+
 jobs.forEach( (job) => {
     if (verbose) {
         console.log("Job:", job.title, "/", job.outputFile);
@@ -304,6 +310,10 @@ jobs.forEach( (job) => {
         fs.writeFileSync(job.outputFile, compiled);        
     }
     
+    if (doWordFrequency) {
+        calculateWordFrequencies();
+    }
+
     console.log("Tables Generated:", totalTablesGenerated);
 });
 
@@ -587,6 +597,8 @@ function generateTableD66(lines, start, size, columns, rows, output) {
 function removeAllWhitespace(s) {
     // return line breaks
     s = s.replace(/(\r\n|\n|\r)/gm, "");
+    // also remove tabs
+    s = s.replace(/[\n\r\t]/gm, "");
     // return spaces
     return s.replace(/\s+/g, '');
 }
@@ -638,11 +650,15 @@ function collectValidLines(lines, startIndex, endIndex) {
     var validLines = [];
     for (let i = startIndex; i <= endIndex; i++) {
         var isLastItem = i == endIndex;
-        const line = lines[i];
+        var line = lines[i];
         // skip empty lines
         if (removeAllWhitespace(line) == "") {
             continue;
         }
+
+        // remove trialing whitespace and endlines without removing inner whitespace
+        line = line.trim();
+
         validLines.push(line);
 
         // check for duplicate entries
@@ -657,7 +673,10 @@ function collectValidLines(lines, startIndex, endIndex) {
     if (shuffleItems) {
         shuffleArray(validLines);
     }
-     
+
+    // store lines in tableData for later analysis
+    tableData.tablesByTitle[currentSectionHeader] = validLines.slice();
+
     return validLines;
 }
 
@@ -972,6 +991,48 @@ function isOutlineNote(s) {
     }
 }
 
+function calculateWordFrequencies() {
+    
+    var wordCounts = [];
+
+    var data = tableData.tablesByTitle;
+    for (let tableName in data) {
+        var entries = data[tableName];
+
+        for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            if (!wordCounts.hasOwnProperty(entry)) {
+                wordCounts[entry] = [];
+            }    
+            wordCounts[entry].push(tableName);
+        }
+    }
+
+    // sort outputs by most used words
+
+    var sorted = [];
+    for (let key in wordCounts) {
+        sorted.push({
+            tableName : key,
+            usageCount : wordCounts[key].length,
+            usageList : wordCounts[key]
+        });
+    }
+    
+    sorted.sort(function(a, b) {
+        return a.usageCount - b.usageCount;
+    });
+    
+    console.log(sorted);
+    for (let i = 0; i < sorted.length; i++) {
+        const entry = sorted[i];
+        console.log(`Word "${entry.tableName}" used ${entry.usageCount} times`);
+        for (let wi = 0; wi < entry.usageList.length; wi++) {
+            const context = entry.usageList[wi];
+            console.log(`   - ${context}`);
+        }
+    }
+}
 
 function printManual() {
 

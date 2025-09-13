@@ -108,6 +108,13 @@ Using the flag `--list` or `-ls` will output simple lists. This is useful if ope
 
 Table structure is wrapped in `<div>` tags. 
 
+
+### Generate Word Frequency Analysis (`--wordfrequency` or `-wf`)
+
+Using the flag `--wordfrequency` or `-wf` will output a word frequency analysis, showing how often a given word or entry has been used by different tables, and will list all tables the word is used in. 
+
+The output is sorted by usage count.
+
 ### CSS Style
 
 The output html files contain a reference to an external style sheet, called `style.css`. The example project supplies an example style sheet, which can be customised as needed.
@@ -180,6 +187,12 @@ The number of columns in a table can be controlled by adding a colon, and a numb
 Example, the following would produce a two column table, overriding the default.
 
     [table_d100:2]
+
+### Randomise table entry order (`:rnd`)
+
+Tagging tables with `:rnd` will cause the entries in the output table to be randomised.
+
+    [table_d100:rnd]
 
 ### Set Internal Values
 
