@@ -250,7 +250,7 @@ The `rpgbuild.json` file also supports comments. (Comments are not normally a su
 
 ### Outliner Notes
 
-Some text editors that feature an "Outliner" that displays markdown headers in a sidebar for easy access. This feature allows users to display "Outline notes" in the outliner without including them in the final document.
+Some text editors feature an "Outliner" that displays markdown headers in a sidebar for easy access. This feature allows users to display "Outline notes" in the outliner without including them in the final document.
 
 Any header that starts with an @ symbol will be stripped.
 

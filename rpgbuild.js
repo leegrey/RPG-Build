@@ -1023,15 +1023,16 @@ function calculateWordFrequencies() {
         return a.usageCount - b.usageCount;
     });
     
-    console.log(sorted);
     for (let i = 0; i < sorted.length; i++) {
         const entry = sorted[i];
-        console.log(`Word "${entry.tableName}" used ${entry.usageCount} times`);
+        console.log(`"${entry.tableName}" used ${entry.usageCount} ${entry.usageCount > 1 ? "times" : "time"}`);
         for (let wi = 0; wi < entry.usageList.length; wi++) {
             const context = entry.usageList[wi];
             console.log(`   - ${context}`);
         }
     }
+
+    console.log(`Total unique table entries: ${sorted.length}`)
 }
 
 function printManual() {
