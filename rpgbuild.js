@@ -74,11 +74,15 @@ if (verbose) {
     console.log("Verbose...");
 }
 
+const processTimerString = "Total execution time: ";
+console.time(processTimerString);
+
 var jobs = null;
 
 // Check to see if there are any commandline arguments, and attempt to
 // interpret them as input and output filenames
 if (cliArgs.filePaths.length > 0) {
+    
     var filePaths = cliArgs.filePaths;
     var pathToSourceFile = filePaths[0];
     
@@ -316,6 +320,10 @@ jobs.forEach( (job) => {
 
     console.log("Tables Generated:", totalTablesGenerated);
 });
+
+if (verbose) {
+    console.timeEnd(processTimerString);
+}
 
 /////////////////////////
 
