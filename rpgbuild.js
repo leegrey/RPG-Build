@@ -58,6 +58,7 @@ const isDryRun = hasCliFlag("--dry-run", "-dr");
 const verbose = hasCliFlag("--verbose", "-v");
 const outputLists = hasCliFlag("--list", "-ls");
 const doWordFrequency = hasCliFlag("-wordfrequency", "-wf");
+const printExecutionTime = hasCliFlag("--time", "-time");
 // const warn = hasCliFlag("--warn", "-w");
 
 const manualRequested = hasCliFlag("--man", "-m", "-h");
@@ -321,7 +322,7 @@ jobs.forEach( (job) => {
     console.log("Tables Generated:", totalTablesGenerated);
 });
 
-if (verbose) {
+if (verbose || printExecutionTime) {
     console.timeEnd(processTimerString);
 }
 
