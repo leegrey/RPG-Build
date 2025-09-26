@@ -547,6 +547,15 @@ function processSet(commandString) {
             renderDieType = boolString === 'true';
             break;
 
+        case "render_item_count":
+            if (tokens.length < 3) { 
+                logError("Invalid:", commandString);
+                return; 
+            } 
+            var boolString = removeAllWhitespace(tokens[2]);
+            renderItemCount = boolString === 'true';
+            break;
+
         default:
             logError("Unknown set:", commandString);
             break;
